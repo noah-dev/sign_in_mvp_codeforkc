@@ -3,32 +3,45 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- Angular Material style sheet -->
         <link rel="stylesheet" href="./node_modules/angular-material/angular-material.css">
+        <link rel="stylesheet" href="./static/style/style.css">
     </head>
-    <body>
-        <div ng-app="signInApp" >
-            <div ng-controller="signInCtrl as sic" layout="column" ng-cloak="" class="autocompletedemoBasicUsage" ng-app="MyApp">
-                <md-content class="md-padding">
-                    <form ng-submit="$event.preventDefault()">
-                    <md-autocomplete    md-selected-item="sic.selectedItem" 
-                                        md-search-text="sic.searchText" 
-                                        md-items="item in sic.filterMembers(sic.searchText)" 
-                                        md-item-text="item.display" 
-                                        md-min-length="0" 
-                                        placeholder="What is your Name?">
-                        <md-item-template>
-                            <span md-highlight-text="sic.searchText" md-highlight-flags="^i">{{item.display}}</span>
-                        </md-item-template>
-                        <md-not-found>No names matching "{{sic.searchText}}" were found.</md-not-found>
-                    </md-autocomplete>
-                    </form>
-                </md-content>
-            </div>
+    <body ng-app="signInApp" layout = "column">
+        <md-toolbar class = "md-title">
+            <h1>Angualr Material Starter</h1>
+        </md-toolbar>
+
+        <div  layout = "row" flex>
+            <md-sidenav md-is-locked-open="true" class="md-whiteframe-4dp">
+                Sidenav
+            </md-sidenav>
+            <md-content id="content" flex>
+                <div ng-controller="signInCtrl as sic" layout="column" ng-cloak="" class="autocompletedemoBasicUsage" ng-app="MyApp">
+                        <md-content class="md-padding">
+                            <form ng-submit="$event.preventDefault()">
+                            <md-autocomplete    md-selected-item="sic.selectedItem" 
+                                                md-search-text="sic.searchText" 
+                                                md-items="item in sic.filterMembers(sic.searchText)" 
+                                                md-item-text="item.display" 
+                                                md-min-length="0" 
+                                                placeholder="What is your Name?">
+                                <md-item-template>
+                                    <span md-highlight-text="sic.searchText" md-highlight-flags="^i">{{item.display}}</span>
+                                </md-item-template>
+                                <md-not-found>No names matching "{{sic.searchText}}" were found.</md-not-found>
+                            </md-autocomplete>
+                            </form>
+                        </md-content>
+                    </div>
+            </md-content>
         </div>
+
+        <hr>
+
 
         <script src="./node_modules/angular/angular.min.js"></script>
         <script src="./node_modules/angular-animate/angular-animate.min.js"></script>
         <script src="./node_modules/angular-aria/angular-aria.min.js"></script>
         <script src="./node_modules/angular-material/angular-material.min.js"></script>
-        <script src="./js/app.js"></script>
+        <script src="./static/js/app.js"></script>
     </body>
 </html>
