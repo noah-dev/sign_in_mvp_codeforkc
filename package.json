@@ -14,5 +14,13 @@
     "karma": "^1.7.1",
     "karma-chrome-launcher": "^2.2.0",
     "karma-jasmine": "^1.1.0"
+  },
+  "dependencies": {
+    "angular": "^1.6.6",
+    "angular-animate": "file:node_modules\\angular-animate",
+    "angular-aria": "^1.6.6",
+    "angular-material": "^1.1.5",
+    "angular-messages": "^1.6.6",
+    "angular-mocks": "^1.6.6"
   }
 }
