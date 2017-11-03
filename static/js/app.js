@@ -68,7 +68,7 @@ function signInCtrl ( $mdToast, SimpleStore) {
             // What was that? You said this is a disgusting terrible work around?
             // Believe me, I agree with you. But every other approach I found seemed to be way uglier. 
             // I am seriously open to suggestions - because this is downright stupid. 
-            var invisibleInput = angular.element(document.querySelector('#toolbar'));
+            var invisibleInput = angular.element(document.querySelector('#DefocusWorkAround'));
             invisibleInput.focus();
             _this.selectedItem = null;
             invisibleInput.blur();
