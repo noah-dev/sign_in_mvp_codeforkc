@@ -19,6 +19,7 @@
                     <md-card-actions ng-controller="signInCtrl as sic" layout="column" layout-align="center center">
                         <form name="signInForm" ng-submit ="sic.confirmSignIn(sic.selectedItem)">
                             <md-autocomplete class="MainInput"
+                                    name="name"
                                     required=""
                                     md-no-cache="true" 
                                     md-selected-item="sic.selectedItem" 

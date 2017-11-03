@@ -34,30 +34,39 @@ function signInCtrl ($mdToast, SimpleStore) {
     _this.confirmSignIn = confirmSignIn
 
     function filterMembers (query) {
-        // Attempting to reacreate an intermittent bug - wondering if this will catch it. 
-        if(query != _this.searchText){
-            console.log("ERROR: " + query + " | " + _this.searchText);
-        }
         var filteredNames = [];
-        for(var i = 0; i < _this.members.length; i++){
-            var member = _this.members[i];
-            if (member.value.indexOf(query) == 0){
-                filteredNames.push(member);
+        
+        // If the user types something, but then deletes all characters, 
+        // reutn the entire list
+        if (query === undefined){
+            filteredNames = _this.members;
+        } else {
+            for(var i = 0; i < _this.members.length; i++){
+                var member = _this.members[i];
+                if (member.value.indexOf(query) == 0){
+                    filteredNames.push(member);
+                }
             }
         }
         return filteredNames;
     }
 
     function confirmSignIn(member){
-        console.log("Hi");
-        console.log(member);
+        var message = "";
+        if(member){
+            message = "Signed In - Thank You! :)";
+            _this.selectedItem = null;
+        } else {
+            message = "ERROR - Name Not Found";
+        }
         $mdToast.show(
             $mdToast.simple()
-              .textContent('Signed In - Thank You! :)')
-              .parent(document.querySelectorAll('#MainCard'))
-              .position("bottom right")
-              .hideDelay(500)
-          );
+            .textContent(message)
+            .parent(document.querySelectorAll('#MainCard'))
+            .position("bottom right")
+            .hideDelay(1000)
+        );
+        
     }
 
 };
