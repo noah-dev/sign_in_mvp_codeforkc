@@ -15,9 +15,11 @@
             <div flex-xs flex-gt-xs="30" layout="column">
                 <md-card id = "MainCard" class = "content">
                     <img src="./static/assets/Code_For_KC_Cropped.png" class="md-card-image" alt="Washed Out">
-                    <md-card-actions layout="column" layout-align="center center">
-                        <md-content ng-controller="signInCtrl as sic" class="md-padding content">
+                    
+                    <md-card-actions ng-controller="signInCtrl as sic" layout="column" layout-align="center center">
+                        <form name="signInForm" ng-submit ="sic.confirmSignIn(sic.selectedItem)">
                             <md-autocomplete class="MainInput"
+                                    required=""
                                     md-no-cache="true" 
                                     md-selected-item="sic.selectedItem" 
                                     md-search-text="sic.searchText" 
@@ -32,11 +34,11 @@
                             </md-autocomplete>
                             <br>
                             <div layout="row" layout-align="center center">
-                                <md-button class="md-raised md-accent" ng-click="sic.confirmSignIn(sic.selectedItem)">Sign In</md-button>
+                                <md-button type="submit" class="md-raised md-accent">Sign In</md-button>
                             </div>
                             <br>
                             <br>
-                        </md-content>
+                        </form>
                     </md-card-actions>
                 </md-card>
             </div>
