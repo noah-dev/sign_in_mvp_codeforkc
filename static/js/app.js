@@ -62,13 +62,13 @@ function signInCtrl ( $mdToast, SimpleStore) {
             // of avalible names. Not only does it overlap the toast message, it is confusing. 
             // So originally, I just wanted to defocus off of the autocomplete input. But angular did not make 
             // this easy, and jQuery's blur method failed on the autcomplete element.
-            // Therefore, there is an invisible, opaque input that sits behind the button. Using Angular's jQuery
-            // lite functionality, we select it using focus, empty the autcomplete, and then deselect it with blur.
+            // Therefore, we select the the body, empty the autcomplete input, and deselect the body. 
 
             // What was that? You said this is a disgusting terrible work around?
             // Believe me, I agree with you. But every other approach I found seemed to be way uglier. 
+            // (My previous approach was even worse - using an invisible input instead of the body)
             // I am seriously open to suggestions - because this is downright stupid. 
-            var invisibleInput = angular.element(document.querySelector('#DefocusWorkAround'));
+            var invisibleInput = angular.element(document.querySelector('body'));
             invisibleInput.focus();
             _this.selectedItem = null;
             invisibleInput.blur();
