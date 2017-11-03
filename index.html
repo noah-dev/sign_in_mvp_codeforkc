@@ -3,7 +3,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- Angular Material style sheet -->
         <link rel="stylesheet" href="./node_modules/angular-material/angular-material.css">
-        <link rel="stylesheet" href="./static/assets/styles/index.css">
+        <link rel="stylesheet" href="./static/assets/styles/signin.css">
         <link rel="stylesheet" href="./static/assets/styles/toast.css">
     </head>
 
@@ -19,7 +19,7 @@
                     <img src="./static/assets/images/Code_For_KC_Cropped.png" class="md-card-image" alt="Washed Out">
                     
                     <md-card-actions ng-controller="signInCtrl as sic" layout="column" layout-align="center center">
-                        <form name="signInForm" ng-submit ="sic.confirmSignIn(sic.selectedItem, sic.searchText)">
+                        <form name="signInForm" ng-submit ="sic.signIn(sic.selectedItem, sic.searchText)">
                             <md-autocomplete id="MainInput"
                                     ng-disabled="sic.mainInputDisabled"
                                     required=""
@@ -33,7 +33,7 @@
                                 <md-item-template>
                                     <span md-highlight-text="sic.searchText" md-highlight-flags="^i">{{item.display}}</span>
                                 </md-item-template>
-                                <md-not-found>No names matching "{{sic.searchText}}" were found.</md-not-found>
+                                <md-not-found>"{{sic.searchText}}" not found</md-not-found>
                             </md-autocomplete>
                             <br>
                             <div layout="row" layout-align="center center">

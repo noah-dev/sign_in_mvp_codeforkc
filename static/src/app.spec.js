@@ -1,6 +1,6 @@
 function TestStore() {
     return function () {
-        var allNames = 'Noah R, Alex M, Alice J';
+        var allNames = 'Noah R, Noel J, Alex M, Alice J';
         var nameList = allNames.split(/, +/g).map( name => {
             return {
             value: name.toLowerCase(),
@@ -46,48 +46,50 @@ describe('Sign in App', ()=> {
         });
     
         it('Does basic filter work?', ()=>{
-            var result = $scope.filterMembers("n");
+            var result = $scope.filterMembers("noah");
             var expected = [{"value": "noah r", "display": "Noah R"}];
             expect(result).toEqual(expected);
         });
     });
 
     describe('Confirm sign in', ()=>{
-        it('If the user did not select a name and the search text matches nothing, does it return error?', ()=>{
-            var searchText = ""
+        var testMember;
+        beforeEach(()=>{
+            // Noah R
+            testMember = $scope.members[2];
+        })
+        it('If the user did not select a name and the search text matches nothing, does it fail?', ()=>{
+            var searchText = " ";
             var result = $scope.confirmSignIn(null, searchText);
-            var expected = [CONFIG.signInErrorMessage(searchText), CONFIG.signInErrorTheme, CONFIG.signInErrorDelay];
+            var expected = {};
+            expected.status = false;
+            expected.member = null;
             expect(result).toEqual(expected);
         });
-        describe('If the user did not select a name and but the search text matches up, does it return error?', ()=>{
-            var searchText = "";
-            var dispalyText = "";
-            beforeEach(()=>{
-                searchText = "Noah";
-                displayText = "Noah R";
-            })
-            it('lower case search', ()=>{
-                var result = $scope.confirmSignIn(null, searchText.toLowerCase());
-                var expected = [CONFIG.signInSuccessMessage(displayText), CONFIG.signInSuccessTheme, CONFIG.signInSuccessDelay];
-                expect(result).toEqual(expected);
-            });
-            it('upper case search', ()=>{
-                var result = $scope.confirmSignIn(null, searchText.toUpperCase());
-                var expected = [CONFIG.signInSuccessMessage(displayText), CONFIG.signInSuccessTheme, CONFIG.signInSuccessDelay];
-                expect(result).toEqual(expected);
-            });
-            it('mixed case search', ()=>{
-                searchText = "NoAh R"
-                var result = $scope.confirmSignIn(null, searchText);
-                var expected = [CONFIG.signInSuccessMessage(displayText), CONFIG.signInSuccessTheme, CONFIG.signInSuccessDelay];
-                expect(result).toEqual(expected);
-            });
-        });
-        it('If the argment is valid, does it return success?', ()=>{
-            var testMember = $scope.members[0];
+        it('If the user searched and selected a name, does it confirm?', ()=>{
             var result = $scope.confirmSignIn(testMember, testMember.display)
-            var expected = [CONFIG.signInSuccessMessage(testMember.display), CONFIG.signInSuccessTheme, CONFIG.signInSuccessDelay];
+            var expected = {};
+            expected.status = true;
+            expected.member = testMember;
             expect(result).toEqual(expected);
+        });
+        describe('The user did not select a name and but the search text matches up', ()=>{
+            it('If the autocomplete picks up multiple names, does it fail?', ()=>{
+                var searchText = "n";
+                var result = $scope.confirmSignIn(null, searchText);
+                var expected = {};
+                expected.status = false;
+                expected.member = null;
+                expect(result).toEqual(expected);
+            });
+            it('If enough is typed into to reduce to 1 name, does it work?', ()=>{
+                var searchText = "Noah";
+                var result = $scope.confirmSignIn(null, searchText);
+                var expected = {};
+                expected.status = true;
+                expected.member = testMember;
+                expect(result).toEqual(expected);
+            });
         });
     });
 });

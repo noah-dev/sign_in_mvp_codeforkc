@@ -49,7 +49,9 @@ function signInCtrl ( $timeout, $mdToast, SimpleStore, Config) {
     _this.CONFIG = new Config();
 
     _this.filterMembers = filterMembers;
-    _this.confirmSignIn = confirmSignIn
+    _this.signIn = signIn;
+    _this.confirmSignIn = confirmSignIn;
+    _this.updateUI = updateUI;
     _this.deFocus = deFocus;
     _this.writeToDB = writeToDB;
 
@@ -72,42 +74,54 @@ function signInCtrl ( $timeout, $mdToast, SimpleStore, Config) {
     }
 
     function signIn(member, searchText){
-        _this.confirmSignIn();
-        _this.writeToDB();
-        _this.showToast();
+        var res, name;
+        res = _this.confirmSignIn(member, searchText);
+        name = res.member ? res.member.display : searchText;
+        _this.updateUI(res.status, name);
     }
 
     function confirmSignIn(member, searchText){
-        var message = "";
-        var theme = "";
-        var timeDelay = 0;
-        
+        var status, res = {}; 
         // If the user does not select an item but presses enter, the member object will be null
         // But if the user got the spelling right, then populate the member object
         if (member == null){
             member = filterMembers(searchText).length == 1 ? filterMembers(searchText)[0] : null;
+        } 
+
+        // If this is a valid member, set status to true. Otherwise false.
+        status = member ? true : false;
+
+        if (status) {
+            _this.writeToDB(member);
         }
-        
-        if (member){
-            message = _this.CONFIG.signInSuccessMessage(member.display);
+        res.status = status;
+        res.member = member; 
+        return res; 
+    }
+    function writeToDB(){
+        return "";
+    }
+    function updateUI(status, name){
+        var message = "";
+        var theme = "";
+        var timeDelay = 0;
+        if (status){
+            message = _this.CONFIG.signInSuccessMessage(name);
             theme = _this.CONFIG.signInSuccessTheme;
             timeDelay = _this.CONFIG.signInSuccessDelay;
 
             _this.deFocus();
-
+            
             _this.selectedItem = null;
             _this.searchText = undefined;
-
+    
             _this.mainInputDisabled = true;
             $timeout(()=>{_this.mainInputDisabled = false}, 2 * timeDelay)
         } else {
-            message = _this.CONFIG.signInErrorMessage(searchText);
+            message = _this.CONFIG.signInErrorMessage(name);
             theme = _this.CONFIG.signInErrorTheme;
             timeDelay = _this.CONFIG.signInErrorDelay;
         }
-
-        _this.writeToDB();
-        
         $mdToast.show(
             $mdToast.simple()
             .textContent(message)
@@ -116,13 +130,6 @@ function signInCtrl ( $timeout, $mdToast, SimpleStore, Config) {
             .position("bottom right")
             .hideDelay(timeDelay)
         );
-        return [message, theme, timeDelay];
-    }
-    function writeToDB(){
-        return "";
-    }
-    function showToast(){
-        return "";
     }
     function deFocus(){
         // Long story short, if the user presses enter the cursor stays on the autcomplete input.
