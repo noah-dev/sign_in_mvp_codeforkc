@@ -53,8 +53,12 @@ function signInCtrl ( $mdToast, SimpleStore) {
 
     function confirmSignIn(member){
         var message = "";
+        var theme = "";
+        var timeDelay = 0;
         if(member){
-            message = "Signed In - Thank You! :)";
+            message = "Signed In - Thank You! 😊";
+            theme = "success"
+            timeDelay = 1000;
             // Long story short, if the user presses enter the cursor stays on the autcomplete input.
             // But we clear the input out after every sign in, so the filter reruns and shows the list
             // of avalible names. Not only does it overlap the toast message, it is confusing. 
@@ -71,14 +75,17 @@ function signInCtrl ( $mdToast, SimpleStore) {
             _this.selectedItem = null;
             invisibleInput.blur();
         } else {
-            message = "ERROR - Name Not Found";
+            message = "Sorry, I could not find that name. Please try again 😵";
+            theme = "error"
+            timeDelay = 4000;
         }
         $mdToast.show(
             $mdToast.simple()
             .textContent(message)
+            .theme(theme)
             .parent(document.querySelectorAll('#MainCard'))
             .position("bottom right")
-            .hideDelay(1000)
+            .hideDelay(timeDelay)
         );
         
     }
