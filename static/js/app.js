@@ -29,23 +29,27 @@ app.factory('SimpleStore', function(){
 
 app.factory('Config', function(){
     return function () {
-        this.signInSuccessMessage = "Signed In - Thank You! 😊";
-        this.signInSuccessTheme = "success";
-        this.signInSuccessDelay = 1000;
+        var _this = this;
+        _this.signInSuccessMessage = (name)=>{return "Welcome PLACEHOLDER 😊".replace("PLACEHOLDER", name);}
+        _this.signInSuccessTheme = "success";
+        _this.signInSuccessDelay = 1000;
 
-        this.signInErrorMessage =  "Sorry, I could not find that name. Please try again 😵";
-        this.signInErrorTheme = "error";
-        this.signInErrorDelay = 4000;
+        _this.signInErrorMessage = (name)=>{return "Can't find PLACEHOLDER. Sorry 😵".replace("PLACEHOLDER", name);}
+        _this.signInErrorTheme = "error";
+        _this.signInErrorDelay = 2000;
+
     }
 });
 
-function signInCtrl ( $mdToast, SimpleStore, Config) {
+function signInCtrl ( $timeout, $mdToast, SimpleStore, Config) {
     var _this = this;
     _this.members = SimpleStore();
     _this.CONFIG = new Config();
 
     _this.filterMembers = filterMembers;
     _this.confirmSignIn = confirmSignIn
+    _this.deFocus = deFocus;
+    _this.writeToDB = writeToDB;
 
     function filterMembers (query) {
         var filteredNames = [];
@@ -65,36 +69,36 @@ function signInCtrl ( $mdToast, SimpleStore, Config) {
         return filteredNames;
     }
 
-    function confirmSignIn(member){
+    function confirmSignIn(member, searchText){
         var message = "";
         var theme = "";
         var timeDelay = 0;
-        if(member){
-            message = _this.CONFIG.signInSuccessMessage;
+        
+        // If the user does not select an item but presses enter, the member object will be null
+        // But if the user got the spelling right, then populate the member object
+        if (member == null){
+            member = filterMembers(searchText).length == 1 ? filterMembers(searchText)[0] : null;
+        }
+        
+        if (member){
+            message = _this.CONFIG.signInSuccessMessage(member.display);
             theme = _this.CONFIG.signInSuccessTheme;
             timeDelay = _this.CONFIG.signInSuccessDelay;
-            // Long story short, if the user presses enter the cursor stays on the autcomplete input.
-            // But we clear the input out after every sign in, so the filter reruns and shows the list
-            // of avalible names. Not only does it overlap the toast message, it is confusing. 
-            // So originally, I just wanted to defocus off of the autocomplete input. But angular did not make 
-            // this easy, and jQuery's blur method failed on the autcomplete element.
-            // Therefore, we select the the body, empty the autcomplete input, and deselect the body. 
 
-            // What was that? You said this is a disgusting terrible work around?
-            // Believe me, I agree with you. But every other approach I found seemed to be way uglier. 
-            // (My previous approach was even worse - using an invisible input instead of the body)
-            // I am seriously open to suggestions - because this is downright stupid. 
-            var focusWorkAround = angular.element(document.querySelector('#signInBtn'));
-            focusWorkAround.focus();
+            _this.deFocus();
+
             _this.selectedItem = null;
-            focusWorkAround.blur();
+            _this.searchText = undefined;
+
+            _this.mainInputDisabled = true;
+            $timeout(()=>{_this.mainInputDisabled = false}, 2 * timeDelay)
         } else {
-            message = _this.CONFIG.signInErrorMessage;
+            message = _this.CONFIG.signInErrorMessage(searchText);
             theme = _this.CONFIG.signInErrorTheme;
             timeDelay = _this.CONFIG.signInErrorDelay;
         }
 
-        writeToDB();
+        _this.writeToDB();
         
         $mdToast.show(
             $mdToast.simple()
@@ -105,6 +109,22 @@ function signInCtrl ( $mdToast, SimpleStore, Config) {
             .hideDelay(timeDelay)
         );
         return [message, theme, timeDelay];
+    }
+    function deFocus(){
+        // Long story short, if the user presses enter the cursor stays on the autcomplete input.
+        // But we clear the input out after every sign in, so the filter reruns and shows the list
+        // of avalible names. Not only does it overlap the toast message, it is confusing. 
+        // So originally, I just wanted to defocus off of the autocomplete input. But angular did not make 
+        // this easy, and jQuery's blur method failed on the autcomplete element.
+        // Therefore, we select the the body, empty the autcomplete input, and deselect the body. 
+
+        // What was that? You said this is a disgusting terrible work around?
+        // Believe me, I agree with you. But every other approach I found seemed to be way uglier. 
+        // (My previous approach was even worse - using an invisible input instead of the body)
+        // I am seriously open to suggestions - because this is downright stupid. 
+        var focusWorkAround = angular.element(document.querySelector('#signInBtn'));
+        focusWorkAround.focus();
+        focusWorkAround.blur();
     }
     function writeToDB(){
         return "";

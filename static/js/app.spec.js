@@ -1,6 +1,6 @@
 function TestStore() {
     return function () {
-        var allNames = 'Noah R, Alex M';
+        var allNames = 'Noah R, Alex M, Alice J';
         var nameList = allNames.split(/, +/g).map( name => {
             return {
             value: name.toLowerCase(),
@@ -53,14 +53,40 @@ describe('Sign in App', ()=> {
     });
 
     describe('Confirm sign in', ()=>{
-        it('If the argment is null, does it return error?', ()=>{
-            var result = $scope.confirmSignIn(null)
-            var expected = [CONFIG.signInErrorMessage, CONFIG.signInErrorTheme, CONFIG.signInErrorDelay]
+        it('If the user did not select a name and the search text matches nothing, does it return error?', ()=>{
+            var searchText = ""
+            var result = $scope.confirmSignIn(null, searchText);
+            var expected = [CONFIG.signInErrorMessage(searchText), CONFIG.signInErrorTheme, CONFIG.signInErrorDelay];
             expect(result).toEqual(expected);
         });
+        describe('If the user did not select a name and but the search text matches up, does it return error?', ()=>{
+            var searchText = "";
+            var dispalyText = "";
+            beforeEach(()=>{
+                searchText = "Noah";
+                displayText = "Noah R";
+            })
+            it('lower case search', ()=>{
+                var result = $scope.confirmSignIn(null, searchText.toLowerCase());
+                var expected = [CONFIG.signInSuccessMessage(displayText), CONFIG.signInSuccessTheme, CONFIG.signInSuccessDelay];
+                expect(result).toEqual(expected);
+            });
+            it('upper case search', ()=>{
+                var result = $scope.confirmSignIn(null, searchText.toUpperCase());
+                var expected = [CONFIG.signInSuccessMessage(displayText), CONFIG.signInSuccessTheme, CONFIG.signInSuccessDelay];
+                expect(result).toEqual(expected);
+            });
+            it('mixed case search', ()=>{
+                searchText = "NoAh R"
+                var result = $scope.confirmSignIn(null, searchText);
+                var expected = [CONFIG.signInSuccessMessage(displayText), CONFIG.signInSuccessTheme, CONFIG.signInSuccessDelay];
+                expect(result).toEqual(expected);
+            });
+        });
         it('If the argment is valid, does it return success?', ()=>{
-            var result = $scope.confirmSignIn($scope.members[0])
-            var expected = [CONFIG.signInSuccessMessage, CONFIG.signInSuccessTheme, CONFIG.signInSuccessDelay]
+            var testMember = $scope.members[0];
+            var result = $scope.confirmSignIn(testMember, testMember.display)
+            var expected = [CONFIG.signInSuccessMessage(testMember.display), CONFIG.signInSuccessTheme, CONFIG.signInSuccessDelay];
             expect(result).toEqual(expected);
         });
     });

@@ -18,7 +18,7 @@
                     <img src="./static/assets/Code_For_KC_Cropped.png" class="md-card-image" alt="Washed Out">
                     
                     <md-card-actions ng-controller="signInCtrl as sic" layout="column" layout-align="center center">
-                        <form name="signInForm" ng-submit ="sic.confirmSignIn(sic.selectedItem)">
+                        <form name="signInForm" ng-submit ="sic.confirmSignIn(sic.selectedItem, sic.searchText)">
                             <md-autocomplete id="MainInput"
                                     ng-disabled="sic.mainInputDisabled"
                                     required=""
@@ -36,7 +36,7 @@
                             </md-autocomplete>
                             <br>
                             <div layout="row" layout-align="center center">
-                                <md-button type="submit" id="signInBtn" class="md-raised md-accent">Sign In</md-button>
+                                <md-button ng-disabled="sic.mainInputDisabled" type="submit" id="signInBtn" class="md-raised md-accent">Sign In</md-button>
                             </div>
                             <br>
                             <br>
