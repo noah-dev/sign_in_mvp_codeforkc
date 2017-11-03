@@ -70,10 +70,10 @@ function signInCtrl ( $mdToast, SimpleStore) {
             // Believe me, I agree with you. But every other approach I found seemed to be way uglier. 
             // (My previous approach was even worse - using an invisible input instead of the body)
             // I am seriously open to suggestions - because this is downright stupid. 
-            var invisibleInput = angular.element(document.querySelector('#signInBtn'));
-            invisibleInput.focus();
+            var focusWorkAround = angular.element(document.querySelector('#signInBtn'));
+            focusWorkAround.focus();
             _this.selectedItem = null;
-            invisibleInput.blur();
+            focusWorkAround.blur();
         } else {
             message = "Sorry, I could not find that name. Please try again 😵";
             theme = "error"
