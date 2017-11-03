@@ -1,3 +1,13 @@
-.md-input-has-value.bigClass > input {
-    font-size: 30px;
+md-toolbar h1 {
+    margin: auto;
+}
+#content {
+    background-color: #efefef;
+}
+#logo{
+    width: 100%;
+    height: auto;
+}
+.MainInput{
+    width: 300px;
 }

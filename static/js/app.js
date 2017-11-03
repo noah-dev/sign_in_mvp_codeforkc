@@ -1,5 +1,11 @@
 // https://material.angularjs.org/1.1.5/demo/autocomplete
-app = angular.module('signInApp',['ngMaterial']).controller('signInCtrl', signInCtrl);
+app = angular.module('signInApp',['ngMaterial'])
+    .config(($mdThemingProvider) => {
+        $mdThemingProvider.theme('default')
+        .primaryPalette('red')
+        .accentPalette('blue');
+    })
+    .controller('signInCtrl', signInCtrl);
 
 app.factory('SimpleStore', function(){
     return function () {
