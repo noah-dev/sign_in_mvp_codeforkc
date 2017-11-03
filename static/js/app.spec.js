@@ -21,12 +21,15 @@ describe('Sign in App', ()=> {
     var $controller;
     var $scope = {};
     var Store = {};
-    beforeEach(inject(SimpleStore => {
-        Store = SimpleStore;
+    var TestConfig;
+    var CONFIG;
+    beforeEach(inject(Config => {
+        TestConfig = Config;
+        CONFIG = new Config;
     }));
     beforeEach(inject(_$controller_=>{
         $controller = _$controller_;
-        $scope = $controller('signInCtrl as sic', {$scope: $scope, SimpleStore: TestStore()});
+        $scope = $controller('signInCtrl as sic', {$scope: $scope, SimpleStore: TestStore(), Config: TestConfig});
     }));
 
     describe('Filter members function', ()=>{
@@ -45,6 +48,19 @@ describe('Sign in App', ()=> {
         it('Does basic filter work?', ()=>{
             var result = $scope.filterMembers("n");
             var expected = [{"value": "noah r", "display": "Noah R"}];
+            expect(result).toEqual(expected);
+        });
+    });
+
+    describe('Confirm sign in', ()=>{
+        it('If the argment is null, does it return error?', ()=>{
+            var result = $scope.confirmSignIn(null)
+            var expected = [CONFIG.signInErrorMessage, CONFIG.signInErrorTheme, CONFIG.signInErrorDelay]
+            expect(result).toEqual(expected);
+        });
+        it('If the argment is valid, does it return success?', ()=>{
+            var result = $scope.confirmSignIn($scope.members[0])
+            var expected = [CONFIG.signInSuccessMessage, CONFIG.signInSuccessTheme, CONFIG.signInSuccessDelay]
             expect(result).toEqual(expected);
         });
     });

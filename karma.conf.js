@@ -22,7 +22,7 @@ module.exports = function(config) {
       './node_modules/angular-material/angular-material.min.css',
       './node_modules/angular-mocks/angular-mocks.js',
       
-      './js/*.js'
+      './static/js/*.js'
     ],
 
 
