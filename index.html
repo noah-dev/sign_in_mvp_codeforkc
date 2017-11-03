@@ -6,18 +6,18 @@
         <link rel="stylesheet" href="./static/style/style.css">
     </head>
 
-    <body ng-app="signInApp">
+    <body ng-app="signInApp" ng-cloak="">
+        
         <md-toolbar class="md-toolbar-tools" id = "toolbar">
             <h1>Code for KC Sign In</h1>
         </md-toolbar>
         <br>
-        <md-content layout-xs="column" layout="row" layout-align="center start">
-            <div flex-xs flex-gt-xs="30" layout="column">
+        <md-content layout-sm="column" layout="row" layout-align="center start">
+            <div flex-sm flex-gt-sm="30" layout="column">
                 <md-card id = "MainCard" class = "content">
                     <img src="./static/assets/Code_For_KC_Cropped.png" class="md-card-image" alt="Washed Out">
                     
                     <md-card-actions ng-controller="signInCtrl as sic" layout="column" layout-align="center center">
-                        
                         <form name="signInForm" ng-submit ="sic.confirmSignIn(sic.selectedItem)">
                             <md-autocomplete id="MainInput"
                                     ng-disabled="sic.mainInputDisabled"

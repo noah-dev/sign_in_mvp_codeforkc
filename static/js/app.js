@@ -43,7 +43,7 @@ function signInCtrl ( $mdToast, SimpleStore) {
         } else {
             for(var i = 0; i < _this.members.length; i++){
                 var member = _this.members[i];
-                if (member.value.indexOf(query) == 0){
+                if (member.value.indexOf(query.toLowerCase()) == 0){
                     filteredNames.push(member);
                 }
             }
@@ -55,8 +55,6 @@ function signInCtrl ( $mdToast, SimpleStore) {
         var message = "";
         if(member){
             message = "Signed In - Thank You! :)";
-            
-
             // Long story short, if the user presses enter the cursor stays on the autcomplete input.
             // But we clear the input out after every sign in, so the filter reruns and shows the list
             // of avalible names. Not only does it overlap the toast message, it is confusing. 
