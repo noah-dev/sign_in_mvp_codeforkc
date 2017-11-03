@@ -1,13 +1,6 @@
-md-toolbar h1 {
-    margin: auto;
-}
-#content {
-    background-color: #efefef;
-}
-#logo{
-    width: 100%;
-    height: auto;
-}
 .MainInput{
     width: 300px;
+}
+.md-button.md-raised:not([disabled]) {
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
 }

@@ -3,7 +3,7 @@ app = angular.module('signInApp',['ngMaterial'])
     .config(($mdThemingProvider) => {
         $mdThemingProvider.theme('default')
         .primaryPalette('red')
-        .accentPalette('blue');
+        .accentPalette('light-blue');
     })
     .controller('signInCtrl', signInCtrl);
 
