@@ -7,7 +7,7 @@
     </head>
 
     <body ng-app="signInApp">
-        <md-toolbar class="md-toolbar-tools toolbar">
+        <md-toolbar class="md-toolbar-tools" id = "toolbar">
             <h1>Code for KC Sign In</h1>
         </md-toolbar>
         <br>
@@ -18,7 +18,7 @@
                     
                     <md-card-actions ng-controller="signInCtrl as sic" layout="column" layout-align="center center">
                         <form name="signInForm" ng-submit ="sic.confirmSignIn(sic.selectedItem)">
-                            <md-autocomplete class="MainInput"
+                            <md-autocomplete id="MainInput"
                                     name="name"
                                     required=""
                                     md-no-cache="true" 

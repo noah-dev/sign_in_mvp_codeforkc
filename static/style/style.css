@@ -1,9 +1,9 @@
-.MainInput{
+#MainInput{
     width: 300px;
 }
 .content{
     background-color:#efefef;
 }
-.toolbar{
+#toolbar{
     margin: auto;
 }
