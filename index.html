@@ -7,12 +7,16 @@
     </head>
 
     <body ng-app="signInApp">
-        <md-content layout-xs="column" layout="row" layout-align="center start" style="height: 100%" >
+        <md-toolbar class="md-toolbar-tools toolbar">
+            <h1>Code for KC Sign In</h1>
+        </md-toolbar>
+        <br>
+        <md-content layout-xs="column" layout="row" layout-align="center start">
             <div flex-xs flex-gt-xs="30" layout="column">
-                <md-card>
+                <md-card class = "content">
                     <img src="./static/assets/Code_For_KC_Cropped.png" class="md-card-image" alt="Washed Out">
                     <md-card-actions layout="column" layout-align="center center">
-                        <md-content  ng-controller="signInCtrl as sic" class="md-padding">
+                        <md-content ng-controller="signInCtrl as sic" class="md-padding content">
                             <md-autocomplete class="MainInput"
                                     md-no-cache="true" 
                                     md-selected-item="sic.selectedItem" 

@@ -1,6 +1,9 @@
 .MainInput{
     width: 300px;
 }
-.md-button.md-raised:not([disabled]) {
-    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+.content{
+    background-color:#efefef;
+}
+.toolbar{
+    margin: auto;
 }
