@@ -11,24 +11,6 @@ app = angular.module('signInApp',['ngMaterial'])
 })
 .controller('signInCtrl', signInCtrl);
 
-app.factory('SimpleStore', function(){
-return function () {
-    var allNames = 'Josh M, Noah R, Paul B, Kathrine H, Stacey G, Aaron D, Bob A, Jane D, Alex M';
-    var nameList = allNames.split(/, +/g).map( name => {
-        return {
-        value: name.toLowerCase(),
-        display: name
-        };
-    });
-    nameList.sort((a, b) =>{ 
-        if(a.value < b.value) return -1;
-        if(a.value > b.value) return 1;
-        return 0;
-    })
-    return nameList;
-}
-});
-
 app.factory('Config', function(){
 return function () {
     var _this = this;
@@ -36,24 +18,36 @@ return function () {
     _this.signInSuccessTheme = "toast-success";
     _this.signInSuccessDelay = 1000;
 
-    _this.signInErrorMessage = (name)=>{return "Can't find PLACEHOLDER. Sorry 😵".replace("PLACEHOLDER", name);}
+    _this.signInErrorMessage = (name)=>{return "Could not sign in PLACEHOLDER. Sorry 😵".replace("PLACEHOLDER", name);}
     _this.signInErrorTheme = "toast-error";
     _this.signInErrorDelay = 2000;
+
+    _this.dbURL = "http://localhost:1000/signin"
 
 }
 });
 
-function signInCtrl ( $timeout, $mdToast, SimpleStore, Config) {
+function signInCtrl ($q,  $http, $timeout, $mdToast, Config) {
     var _this = this;
-    _this.members = SimpleStore();
     _this.CONFIG = new Config();
 
+    _this.members;
     _this.filterMembers = filterMembers;
     _this.signIn = signIn;
     _this.confirmSignIn = confirmSignIn;
     _this.updateUI = updateUI;
     _this.deFocus = deFocus;
-    _this.writeToDB = writeToDB;
+    _this.getMembersDB = getMembersDB;
+    _this.newRecordDB = newRecordDB;
+
+    init();
+    function init(){
+        _this.mainInputDisabled = true;
+        _this.getMembersDB().then(res=>{
+            _this.members = res.data;
+            _this.mainInputDisabled = false;
+        })
+    }
 
     function filterMembers (query) {
         var filteredNames = [];
@@ -65,7 +59,7 @@ function signInCtrl ( $timeout, $mdToast, SimpleStore, Config) {
         } else {
             for(var i = 0; i < _this.members.length; i++){
                 var member = _this.members[i];
-                if (member.value.indexOf(query.toLowerCase()) == 0){
+                if (member.name.toLowerCase().indexOf(query.toLowerCase()) == 0){
                     filteredNames.push(member);
                 }
             }
@@ -76,8 +70,17 @@ function signInCtrl ( $timeout, $mdToast, SimpleStore, Config) {
     function signIn(member, searchText){
         var res, name;
         res = _this.confirmSignIn(member, searchText);
-        name = res.member ? res.member.display : searchText;
-        _this.updateUI(res.status, name);
+        name = res.member ? res.member.name : searchText;
+        if (res.status) {
+            _this.newRecordDB(member).then(writeStatus=>{
+                if (writeStatus == "false"){
+                    res.status = false
+                }
+                _this.updateUI(res.status, name);
+            });
+        } else {
+            _this.updateUI(res.status, name);
+        }
     }
 
     function confirmSignIn(member, searchText){
@@ -90,17 +93,26 @@ function signInCtrl ( $timeout, $mdToast, SimpleStore, Config) {
 
         // If this is a valid member, set status to true. Otherwise false.
         status = member ? true : false;
-
-        if (status) {
-            _this.writeToDB(member);
-        }
+    
         res.status = status;
         res.member = member; 
         return res; 
     }
-    function writeToDB(){
-        return "";
+    function getMembersDB(){
+        return $http({
+            method: 'GET',
+            url: _this.CONFIG.dbURL,
+        })
     }
+    function newRecordDB(member){
+        return $http({
+            method: 'GET',
+            url: _this.CONFIG.dbURL+"?id="+member.id
+        }).then(res=>{
+            return res.data;
+        })
+    }
+
     function updateUI(status, name){
         var message = "";
         var theme = "";

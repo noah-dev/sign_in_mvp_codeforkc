@@ -27,11 +27,11 @@
                                     md-selected-item="sic.selectedItem" 
                                     md-search-text="sic.searchText" 
                                     md-items="item in sic.filterMembers(sic.searchText)" 
-                                    md-item-text="item.display" 
+                                    md-item-text="item.name" 
                                     md-min-length="0" 
                                     placeholder="What's your name?">
                                 <md-item-template>
-                                    <span md-highlight-text="sic.searchText" md-highlight-flags="^i">{{item.display}}</span>
+                                    <span md-highlight-text="sic.searchText" md-highlight-flags="^i">{{item.name}}</span>
                                 </md-item-template>
                                 <md-not-found>"{{sic.searchText}}" not found</md-not-found>
                             </md-autocomplete>
