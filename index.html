@@ -17,9 +17,13 @@
                     <img src="./static/assets/Code_For_KC_Cropped.png" class="md-card-image" alt="Washed Out">
                     
                     <md-card-actions ng-controller="signInCtrl as sic" layout="column" layout-align="center center">
+
+                        <!--This is downright disgusting - but all other approaches I have found are uglier-->
+                        <input type="text" id="DefocusWorkAround">
+                        
                         <form name="signInForm" ng-submit ="sic.confirmSignIn(sic.selectedItem)">
                             <md-autocomplete id="MainInput"
-                                    name="name"
+                                    ng-disabled="sic.mainInputDisabled"
                                     required=""
                                     md-no-cache="true" 
                                     md-selected-item="sic.selectedItem" 

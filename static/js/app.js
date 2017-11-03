@@ -27,7 +27,7 @@ app.factory('SimpleStore', function(){
     }
 });
 
-function signInCtrl ($mdToast, SimpleStore) {
+function signInCtrl ( $mdToast, SimpleStore) {
     var _this = this;
     _this.members = SimpleStore();
     _this.filterMembers = filterMembers;
@@ -55,7 +55,23 @@ function signInCtrl ($mdToast, SimpleStore) {
         var message = "";
         if(member){
             message = "Signed In - Thank You! :)";
+            
+
+            // Long story short, if the user presses enter the cursor stays on the autcomplete input.
+            // But we clear the input out after every sign in, so the filter reruns and shows the list
+            // of avalible names. Not only does it overlap the toast message, it is confusing. 
+            // So originally, I just wanted to defocus off of the autocomplete input. But angular did not make 
+            // this easy, and jQuery's blur method failed on the autcomplete element.
+            // Therefore, there is an invisible, opaque input that sits behind the button. Using Angular's jQuery
+            // lite functionality, we select it using focus, empty the autcomplete, and then deselect it with blur.
+
+            // What was that? You said this is a disgusting terrible work around?
+            // Believe me, I agree with you. But every other approach I found seemed to be way uglier. 
+            // I am seriously open to suggestions - because this is downright stupid. 
+            var invisibleInput = angular.element(document.querySelector('#toolbar'));
+            invisibleInput.focus();
             _this.selectedItem = null;
+            invisibleInput.blur();
         } else {
             message = "ERROR - Name Not Found";
         }
