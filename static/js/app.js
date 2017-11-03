@@ -27,10 +27,11 @@ app.factory('SimpleStore', function(){
     }
 });
 
-function signInCtrl (SimpleStore) {
+function signInCtrl ($mdToast, SimpleStore) {
     var _this = this;
     _this.members = SimpleStore();
     _this.filterMembers = filterMembers;
+    _this.confirmSignIn = confirmSignIn
 
     function filterMembers (query) {
         // Attempting to reacreate an intermittent bug - wondering if this will catch it. 
@@ -45,6 +46,18 @@ function signInCtrl (SimpleStore) {
             }
         }
         return filteredNames;
+    }
+
+    function confirmSignIn(member){
+        console.log("Hi");
+        console.log(member);
+        $mdToast.show(
+            $mdToast.simple()
+              .textContent('Signed In - Thank You! :)')
+              .parent(document.querySelectorAll('#MainCard'))
+              .position("bottom right")
+              .hideDelay(500)
+          );
     }
 
 };

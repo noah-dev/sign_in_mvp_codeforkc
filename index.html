@@ -13,7 +13,7 @@
         <br>
         <md-content layout-xs="column" layout="row" layout-align="center start">
             <div flex-xs flex-gt-xs="30" layout="column">
-                <md-card class = "content">
+                <md-card id = "MainCard" class = "content">
                     <img src="./static/assets/Code_For_KC_Cropped.png" class="md-card-image" alt="Washed Out">
                     <md-card-actions layout="column" layout-align="center center">
                         <md-content ng-controller="signInCtrl as sic" class="md-padding content">
@@ -32,8 +32,10 @@
                             </md-autocomplete>
                             <br>
                             <div layout="row" layout-align="center center">
-                                <md-button class="md-raised md-accent">Sign In</md-button>
+                                <md-button class="md-raised md-accent" ng-click="sic.confirmSignIn(sic.selectedItem)">Sign In</md-button>
                             </div>
+                            <br>
+                            <br>
                         </md-content>
                     </md-card-actions>
                 </md-card>
