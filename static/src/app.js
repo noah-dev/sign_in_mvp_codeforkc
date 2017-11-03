@@ -1,44 +1,46 @@
 // https://material.angularjs.org/1.1.5/demo/autocomplete
 app = angular.module('signInApp',['ngMaterial'])
-    .config(($mdThemingProvider) => {
-        $mdThemingProvider.theme('default')
-        $mdThemingProvider.theme('default')
-            .dark()
-            .primaryPalette('red')
-            .accentPalette('light-blue');
-    })
-    .controller('signInCtrl', signInCtrl);
+.config(($mdThemingProvider) => {
+    $mdThemingProvider.theme('default')
+    $mdThemingProvider.theme('default')
+        .dark()
+        .primaryPalette('red')
+        .accentPalette('light-blue');
+    $mdThemingProvider.theme("toast-success")
+    $mdThemingProvider.theme("toast-error")
+})
+.controller('signInCtrl', signInCtrl);
 
 app.factory('SimpleStore', function(){
-    return function () {
-        var allNames = 'Josh M, Noah R, Paul B, Kathrine H, Stacey G, Aaron D, Bob A, Jane D, Alex M';
-        var nameList = allNames.split(/, +/g).map( name => {
-            return {
-            value: name.toLowerCase(),
-            display: name
-            };
-        });
-        nameList.sort((a, b) =>{ 
-            if(a.value < b.value) return -1;
-            if(a.value > b.value) return 1;
-            return 0;
-        })
-        return nameList;
-    }
+return function () {
+    var allNames = 'Josh M, Noah R, Paul B, Kathrine H, Stacey G, Aaron D, Bob A, Jane D, Alex M';
+    var nameList = allNames.split(/, +/g).map( name => {
+        return {
+        value: name.toLowerCase(),
+        display: name
+        };
+    });
+    nameList.sort((a, b) =>{ 
+        if(a.value < b.value) return -1;
+        if(a.value > b.value) return 1;
+        return 0;
+    })
+    return nameList;
+}
 });
 
 app.factory('Config', function(){
-    return function () {
-        var _this = this;
-        _this.signInSuccessMessage = (name)=>{return "Welcome PLACEHOLDER 😊".replace("PLACEHOLDER", name);}
-        _this.signInSuccessTheme = "success";
-        _this.signInSuccessDelay = 1000;
+return function () {
+    var _this = this;
+    _this.signInSuccessMessage = (name)=>{return "Welcome PLACEHOLDER 😊".replace("PLACEHOLDER", name);}
+    _this.signInSuccessTheme = "toast-success";
+    _this.signInSuccessDelay = 1000;
 
-        _this.signInErrorMessage = (name)=>{return "Can't find PLACEHOLDER. Sorry 😵".replace("PLACEHOLDER", name);}
-        _this.signInErrorTheme = "error";
-        _this.signInErrorDelay = 2000;
+    _this.signInErrorMessage = (name)=>{return "Can't find PLACEHOLDER. Sorry 😵".replace("PLACEHOLDER", name);}
+    _this.signInErrorTheme = "toast-error";
+    _this.signInErrorDelay = 2000;
 
-    }
+}
 });
 
 function signInCtrl ( $timeout, $mdToast, SimpleStore, Config) {
@@ -67,6 +69,12 @@ function signInCtrl ( $timeout, $mdToast, SimpleStore, Config) {
             }
         }
         return filteredNames;
+    }
+
+    function signIn(member, searchText){
+        _this.confirmSignIn();
+        _this.writeToDB();
+        _this.showToast();
     }
 
     function confirmSignIn(member, searchText){
@@ -110,6 +118,12 @@ function signInCtrl ( $timeout, $mdToast, SimpleStore, Config) {
         );
         return [message, theme, timeDelay];
     }
+    function writeToDB(){
+        return "";
+    }
+    function showToast(){
+        return "";
+    }
     function deFocus(){
         // Long story short, if the user presses enter the cursor stays on the autcomplete input.
         // But we clear the input out after every sign in, so the filter reruns and shows the list
@@ -125,9 +139,6 @@ function signInCtrl ( $timeout, $mdToast, SimpleStore, Config) {
         var focusWorkAround = angular.element(document.querySelector('#signInBtn'));
         focusWorkAround.focus();
         focusWorkAround.blur();
-    }
-    function writeToDB(){
-        return "";
     }
 
 };

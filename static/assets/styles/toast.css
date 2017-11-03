@@ -1,0 +1,8 @@
+md-toast.md-toast-success-theme .md-toast-content {
+    font-size: 20px;
+    background-color: green;
+}
+md-toast.md-toast-error-theme .md-toast-content {
+    font-size: 20px;
+    background-color: red;
+}
