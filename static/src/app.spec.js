@@ -1,39 +1,43 @@
-function TestStore() {
-    return function () {
-        var allNames = 'Noah R, Noel J, Alex M, Alice J';
-        var nameList = allNames.split(/, +/g).map( name => {
-            return {
-            value: name.toLowerCase(),
-            display: name
-            };
-        });
-        nameList.sort((a, b) =>{ 
-            if(a.value < b.value) return -1;
-            if(a.value > b.value) return 1;
-            return 0;
-        })
-        return nameList;
-    }
-};
-
 describe('Sign in App', ()=> {
     beforeEach(module('signInApp'));
     var $controller;
     var $scope = {};
-    var Store = {};
-    var TestConfig;
+    var $http = {};
     var CONFIG;
+    var testData = [{"id":0,"name":"Josh M"},{"id":1,"name":"Noah R"},{"id":2,"name":"Paul B"},{"id":3,"name":"Kathrine H"},{"id":4,"name":"Stacey G"},{"id":5,"name":"Aaron D"},{"id":6,"name":"Bob A, Jane D"},{"id":7,"name":"Alex M"}];
     beforeEach(inject(Config => {
         TestConfig = Config;
         CONFIG = new Config;
     }));
+    beforeEach(inject(function($injector){
+        $http = $injector.get('$http');
+        $httpBackend = $injector.get('$httpBackend');
+        $httpBackend.expectGET(CONFIG.dbURL).respond(testData);
+        //$httpBackend.expectGET('/myUrl/myData').respond(200,{data:'expected response'});
+    }));
     beforeEach(inject(_$controller_=>{
         $controller = _$controller_;
-        $scope = $controller('signInCtrl as sic', {$scope: $scope, SimpleStore: TestStore(), Config: TestConfig});
+        $scope = $controller('signInCtrl as sic', {$scope: $scope, Config: TestConfig});
     }));
+    afterEach(function() {
+        //$httpBackend.verifyNoOutstandingExpectation();
+        //$httpBackend.verifyNoOutstandingRequest();
+      });
 
     describe('Filter members function', ()=>{
+        it('should set response variable', function(){
+            $scope.getResponse();
+            $httpBackend.flush();
+            expect($scope.response).toEqual('expected response');
+        });
+        fit("Test", ()=>{
+            $scope.getMembersDB();
+            $httpBackend.flush();
+            console.log($scope.members)
+            //$httpBackend.flush();
+        });
         it('Does it return the entire list?', ()=>{
+            console.log($scope.members);
             var result = $scope.filterMembers("");
             var expected = TestStore()();
             expect(result).toEqual(expected);
@@ -51,7 +55,7 @@ describe('Sign in App', ()=> {
             expect(result).toEqual(expected);
         });
     });
-
+    // Major rewrite here
     describe('Confirm sign in', ()=>{
         var testMember;
         beforeEach(()=>{

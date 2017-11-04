@@ -12,19 +12,19 @@ app = angular.module('signInApp',['ngMaterial'])
 .controller('signInCtrl', signInCtrl);
 
 app.factory('Config', function(){
-return function () {
-    var _this = this;
-    _this.signInSuccessMessage = (name)=>{return "Welcome PLACEHOLDER 😊".replace("PLACEHOLDER", name);}
-    _this.signInSuccessTheme = "toast-success";
-    _this.signInSuccessDelay = 1000;
+    return function () {
+        var _this = this;
+        _this.signInSuccessMessage = (name)=>{return "Welcome PLACEHOLDER 😊".replace("PLACEHOLDER", name);}
+        _this.signInSuccessTheme = "toast-success";
+        _this.signInSuccessDelay = 1000;
 
-    _this.signInErrorMessage = (name)=>{return "Could not sign in PLACEHOLDER. Sorry 😵".replace("PLACEHOLDER", name);}
-    _this.signInErrorTheme = "toast-error";
-    _this.signInErrorDelay = 2000;
+        _this.signInErrorMessage = (name)=>{return "Could not sign in PLACEHOLDER. Sorry 😵".replace("PLACEHOLDER", name);}
+        _this.signInErrorTheme = "toast-error";
+        _this.signInErrorDelay = 2000;
 
-    _this.dbURL = "http://localhost:1000/signin"
-
-}
+        _this.dbURL = "/api"
+        //_this.dbURL = "http://localhost:1000/signin"
+    }
 });
 
 function signInCtrl ($q,  $http, $timeout, $mdToast, Config) {
@@ -39,15 +39,40 @@ function signInCtrl ($q,  $http, $timeout, $mdToast, Config) {
     _this.deFocus = deFocus;
     _this.getMembersDB = getMembersDB;
     _this.newRecordDB = newRecordDB;
+    _this.init = init;
 
-    init();
+    _this.getResponse = function(){
+        $http.get('/myUrl/myData').then(function(result){
+            console.log("Hi")
+            _this.response = result.data;
+        });
+    };
+    
+    _this.init();
     function init(){
+        /*
         _this.mainInputDisabled = true;
         _this.getMembersDB().then(res=>{
             _this.members = res.data;
             _this.mainInputDisabled = false;
+        })*/
+    }
+
+    function getMembersDB(){
+        $http.get(_this.CONFIG.dbURL).then(function(result){
+            console.log("Hi")
+            _this.members = result.data;
+        });
+    }
+    function newRecordDB(member){
+        return $http({
+            method: 'GET',
+            url: _this.CONFIG.dbURL+"?id="+member.id
+        }).then(res=>{
+            return res.data;
         })
     }
+
 
     function filterMembers (query) {
         var filteredNames = [];
@@ -98,21 +123,6 @@ function signInCtrl ($q,  $http, $timeout, $mdToast, Config) {
         res.member = member; 
         return res; 
     }
-    function getMembersDB(){
-        return $http({
-            method: 'GET',
-            url: _this.CONFIG.dbURL,
-        })
-    }
-    function newRecordDB(member){
-        return $http({
-            method: 'GET',
-            url: _this.CONFIG.dbURL+"?id="+member.id
-        }).then(res=>{
-            return res.data;
-        })
-    }
-
     function updateUI(status, name){
         var message = "";
         var theme = "";
