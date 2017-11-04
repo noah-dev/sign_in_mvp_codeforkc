@@ -22,8 +22,8 @@ app.factory('Config', function(){
         _this.signInErrorTheme = "toast-error";
         _this.signInErrorDelay = 2000;
 
-        _this.dbURL = "/api"
-        //_this.dbURL = "http://localhost:1000/signin"
+        //_this.dbURL = "/api"
+        _this.dbURL = "http://localhost:1000/signin"
     }
 });
 
@@ -41,7 +41,7 @@ function signInCtrl ($q,  $http, $timeout, $mdToast, Config) {
     _this.newRecordDB = newRecordDB;
     _this.init = init;
     
-    //_this.init();
+    _this.init();
     function init(){
         _this.mainInputDisabled = true;
         _this.getMembersDB().then(res=>{

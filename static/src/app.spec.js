@@ -4,7 +4,7 @@ describe('Sign in App', ()=> {
     var $scope = {};
     var $http = {};
     var CONFIG;
-    var testData = [{"id":0,"name":"Josh M"},{"id":1,"name":"Noah R"},{"id":2,"name":"Paul B"},{"id":3,"name":"Kathrine H"},{"id":4,"name":"Stacey G"},{"id":5,"name":"Aaron D"},{"id":6,"name":"Bob A, Jane D"},{"id":7,"name":"Alex M"}];
+    var testMembers = [{"id":0,"name":"Josh M"},{"id":1,"name":"Noah R"},{"id":2,"name":"Paul B"},{"id":3,"name":"Kathrine H"},{"id":4,"name":"Stacey G"},{"id":5,"name":"Aaron D"},{"id":6,"name":"Bob A, Jane D"},{"id":7,"name":"Alex M"}];
     beforeEach(inject(Config => {
         TestConfig = Config;
         CONFIG = new Config;
@@ -12,37 +12,44 @@ describe('Sign in App', ()=> {
     beforeEach(inject(function($injector){
         $http = $injector.get('$http');
         $httpBackend = $injector.get('$httpBackend');
-        $httpBackend.expectGET(CONFIG.dbURL).respond(200,testData);
+        $httpBackend.expectGET(CONFIG.dbURL).respond(200, testMembers);
         //$httpBackend.expectGET('/myUrl/myData').respond(200,{data:'expected response'});
     }));
     beforeEach(inject(_$controller_=>{
         $controller = _$controller_;
+        // For init function
+        $httpBackend.expectGET(CONFIG.dbURL).respond(200, testMembers);
         $scope = $controller('signInCtrl as sic', {$scope: $scope, Config: TestConfig});
+        $httpBackend.flush();
     }));
     afterEach(function() {
         $httpBackend.verifyNoOutstandingExpectation();
         $httpBackend.verifyNoOutstandingRequest();
-      });
-
-    describe('Filter members function', ()=>{
-        fit("Test", ()=>{
-            /*
+    });
+    
+    describe('Do database operations work correctly', ()=>{
+        it('Does it get the data?', ()=>{
+            var result = [];
             $scope.getMembersDB().then(res=>{
-                $scope.members = res.data;
-            })*/
-            var x;
-            $http.get(CONFIG.dbURL).then(res=>{
-                x = res.data;
+                result = res.data;
             })
             $httpBackend.flush();
-            console.log(x);
-
+            expect(result).toEqual(testMembers);
         });
-        it('Does it return the entire list?', ()=>{
+        fit('Does it get the data?', ()=>{
             console.log($scope.members);
-            var result = $scope.filterMembers("");
-            var expected = TestStore()();
-            expect(result).toEqual(expected);
+            expect(true).toBeTruthy(;)
+            //expect($scope.members).toEqual(testMembers);
+        });
+    });
+
+    describe('Filter members function', ()=>{
+        it('Does it return the entire list?', ()=>{
+            $scope.getMembersDB().then(res=>{
+                $scope.members = res.data;
+            })
+            $httpBackend.flush();
+            console.log($scope.members);
         });
 
         it('Does it return the an empty list?', ()=>{
