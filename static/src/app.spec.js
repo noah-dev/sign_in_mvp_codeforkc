@@ -12,22 +12,27 @@ describe('Sign in App', ()=> {
     beforeEach(inject(function($injector){
         $http = $injector.get('$http');
         $httpBackend = $injector.get('$httpBackend');
-        $httpBackend.expectGET(CONFIG.dbURL).respond(200, testMembers);
-        //$httpBackend.expectGET('/myUrl/myData').respond(200,{data:'expected response'});
     }));
     beforeEach(inject(_$controller_=>{
         $controller = _$controller_;
+        
         // For init function
         $httpBackend.expectGET(CONFIG.dbURL).respond(200, testMembers);
         $scope = $controller('signInCtrl as sic', {$scope: $scope, Config: TestConfig});
+
         $httpBackend.flush();
-    }));
-    afterEach(function() {
         $httpBackend.verifyNoOutstandingExpectation();
         $httpBackend.verifyNoOutstandingRequest();
-    });
+    }));
     
-    describe('Do database operations work correctly', ()=>{
+    fdescribe('Do database operations work correctly', ()=>{
+        beforeEach(()=>{
+            $httpBackend.expectGET(CONFIG.dbURL).respond(200, testMembers);
+        })
+        afterEach(function() {
+            $httpBackend.verifyNoOutstandingExpectation();
+            $httpBackend.verifyNoOutstandingRequest();
+        });
         it('Does it get the data?', ()=>{
             var result = [];
             $scope.getMembersDB().then(res=>{
@@ -36,10 +41,10 @@ describe('Sign in App', ()=> {
             $httpBackend.flush();
             expect(result).toEqual(testMembers);
         });
-        fit('Does it get the data?', ()=>{
-            console.log($scope.members);
-            expect(true).toBeTruthy(;)
-            //expect($scope.members).toEqual(testMembers);
+        it('Did the init function work?', ()=>{
+            $scope.init();
+            $httpBackend.flush();
+            expect($scope.members).toEqual(testMembers);
         });
     });
 
