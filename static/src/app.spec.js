@@ -12,7 +12,7 @@ describe('Sign in App', ()=> {
     beforeEach(inject(function($injector){
         $http = $injector.get('$http');
         $httpBackend = $injector.get('$httpBackend');
-        $httpBackend.expectGET(CONFIG.dbURL).respond(testData);
+        $httpBackend.expectGET(CONFIG.dbURL).respond(200,testData);
         //$httpBackend.expectGET('/myUrl/myData').respond(200,{data:'expected response'});
     }));
     beforeEach(inject(_$controller_=>{
@@ -20,21 +20,23 @@ describe('Sign in App', ()=> {
         $scope = $controller('signInCtrl as sic', {$scope: $scope, Config: TestConfig});
     }));
     afterEach(function() {
-        //$httpBackend.verifyNoOutstandingExpectation();
-        //$httpBackend.verifyNoOutstandingRequest();
+        $httpBackend.verifyNoOutstandingExpectation();
+        $httpBackend.verifyNoOutstandingRequest();
       });
 
     describe('Filter members function', ()=>{
-        it('should set response variable', function(){
-            $scope.getResponse();
-            $httpBackend.flush();
-            expect($scope.response).toEqual('expected response');
-        });
         fit("Test", ()=>{
-            $scope.getMembersDB();
+            /*
+            $scope.getMembersDB().then(res=>{
+                $scope.members = res.data;
+            })*/
+            var x;
+            $http.get(CONFIG.dbURL).then(res=>{
+                x = res.data;
+            })
             $httpBackend.flush();
-            console.log($scope.members)
-            //$httpBackend.flush();
+            console.log(x);
+
         });
         it('Does it return the entire list?', ()=>{
             console.log($scope.members);

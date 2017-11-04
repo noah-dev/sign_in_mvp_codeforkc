@@ -40,39 +40,15 @@ function signInCtrl ($q,  $http, $timeout, $mdToast, Config) {
     _this.getMembersDB = getMembersDB;
     _this.newRecordDB = newRecordDB;
     _this.init = init;
-
-    _this.getResponse = function(){
-        $http.get('/myUrl/myData').then(function(result){
-            console.log("Hi")
-            _this.response = result.data;
-        });
-    };
     
-    _this.init();
+    //_this.init();
     function init(){
-        /*
         _this.mainInputDisabled = true;
         _this.getMembersDB().then(res=>{
             _this.members = res.data;
             _this.mainInputDisabled = false;
-        })*/
-    }
-
-    function getMembersDB(){
-        $http.get(_this.CONFIG.dbURL).then(function(result){
-            console.log("Hi")
-            _this.members = result.data;
-        });
-    }
-    function newRecordDB(member){
-        return $http({
-            method: 'GET',
-            url: _this.CONFIG.dbURL+"?id="+member.id
-        }).then(res=>{
-            return res.data;
         })
     }
-
 
     function filterMembers (query) {
         var filteredNames = [];
@@ -97,7 +73,7 @@ function signInCtrl ($q,  $http, $timeout, $mdToast, Config) {
         res = _this.confirmSignIn(member, searchText);
         name = res.member ? res.member.name : searchText;
         if (res.status) {
-            _this.newRecordDB(member).then(writeStatus=>{
+            _this.newRecordDB(res.member).then(writeStatus=>{
                 if (writeStatus == "false"){
                     res.status = false
                 }
@@ -123,6 +99,21 @@ function signInCtrl ($q,  $http, $timeout, $mdToast, Config) {
         res.member = member; 
         return res; 
     }
+    function getMembersDB(){
+        return $http({
+            method: 'GET',
+            url: _this.CONFIG.dbURL,
+        })
+    }
+    function newRecordDB(member){
+        return $http({
+            method: 'GET',
+            url: _this.CONFIG.dbURL+"?id="+member.id
+        }).then(res=>{
+            return res.data;
+        })
+    }
+
     function updateUI(status, name){
         var message = "";
         var theme = "";
