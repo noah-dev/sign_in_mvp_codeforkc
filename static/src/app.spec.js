@@ -4,7 +4,11 @@ describe('Sign in App', ()=> {
     var $scope = {};
     var $http = {};
     var CONFIG;
-    var testMembers = [{"id":0,"name":"Josh M"},{"id":1,"name":"Noah R"},{"id":2,"name":"Paul B"},{"id":3,"name":"Kathrine H"},{"id":4,"name":"Stacey G"},{"id":5,"name":"Aaron D"},{"id":6,"name":"Bob A, Jane D"},{"id":7,"name":"Alex M"}];
+    var testMembers = [ { "id": 1, "name": "Yehudit" }, { "id": 2, "name": "Noby" }, 
+                        { "id": 3, "name": "Lyman" }, { "id": 4, "name": "Sidonia" }, 
+                        { "id": 5, "name": "Eileen" }, { "id": 6, "name": "Hirsch" }, 
+                        { "id": 7, "name": "Jedidiah" }, { "id": 8, "name": "Vivie" }, 
+                        { "id": 9, "name": "Eunice" }, { "id": 10, "name": "Jennilee" }];
     beforeEach(inject(Config => {
         TestConfig = Config;
         CONFIG = new Config;
@@ -25,15 +29,14 @@ describe('Sign in App', ()=> {
         $httpBackend.verifyNoOutstandingRequest();
     }));
     
-    fdescribe('Do database operations work correctly', ()=>{
-        beforeEach(()=>{
-            $httpBackend.expectGET(CONFIG.dbURL).respond(200, testMembers);
-        })
+    describe('Do database operations work correctly', ()=>{
         afterEach(function() {
             $httpBackend.verifyNoOutstandingExpectation();
             $httpBackend.verifyNoOutstandingRequest();
         });
         it('Does it get the data?', ()=>{
+            $httpBackend.expectGET(CONFIG.dbURL).respond(200, testMembers);
+
             var result = [];
             $scope.getMembersDB().then(res=>{
                 result = res.data;
@@ -42,19 +45,31 @@ describe('Sign in App', ()=> {
             expect(result).toEqual(testMembers);
         });
         it('Did the init function work?', ()=>{
+            $httpBackend.expectGET(CONFIG.dbURL).respond(200, testMembers);
+
             $scope.init();
             $httpBackend.flush();
             expect($scope.members).toEqual(testMembers);
+        });
+        it('Does a valid write to db succeed?', ()=>{
+            var id = 1;
+            var expected = {status: true};
+            var result;
+
+            $httpBackend.expectGET(CONFIG.dbURL+"?id="+String(id)).respond(200, expected);
+            result = $scope.newRecordDB(testMembers[id-1])
+            $httpBackend.flush();
+            result.then(resDB=>{
+                expect(resDB).toEqual(expected)
+            })
         });
     });
 
     describe('Filter members function', ()=>{
         it('Does it return the entire list?', ()=>{
-            $scope.getMembersDB().then(res=>{
-                $scope.members = res.data;
-            })
-            $httpBackend.flush();
-            console.log($scope.members);
+            var result = $scope.filterMembers(undefined);
+            var expected = $scope.members;
+            expect(result).toEqual(expected);
         });
 
         it('Does it return the an empty list?', ()=>{
@@ -64,8 +79,8 @@ describe('Sign in App', ()=> {
         });
     
         it('Does basic filter work?', ()=>{
-            var result = $scope.filterMembers("noah");
-            var expected = [{"value": "noah r", "display": "Noah R"}];
+            var result = $scope.filterMembers("j");
+            var expected = [{ "id": 7, "name": "Jedidiah" }, { "id": 10, "name": "Jennilee" }];
             expect(result).toEqual(expected);
         });
     });
@@ -73,8 +88,7 @@ describe('Sign in App', ()=> {
     describe('Confirm sign in', ()=>{
         var testMember;
         beforeEach(()=>{
-            // Noah R
-            testMember = $scope.members[2];
+            testMember = testMembers[6]
         })
         it('If the user did not select a name and the search text matches nothing, does it fail?', ()=>{
             var searchText = " ";
@@ -93,7 +107,7 @@ describe('Sign in App', ()=> {
         });
         describe('The user did not select a name and but the search text matches up', ()=>{
             it('If the autocomplete picks up multiple names, does it fail?', ()=>{
-                var searchText = "n";
+                var searchText = "je";
                 var result = $scope.confirmSignIn(null, searchText);
                 var expected = {};
                 expected.status = false;
@@ -101,7 +115,7 @@ describe('Sign in App', ()=> {
                 expect(result).toEqual(expected);
             });
             it('If enough is typed into to reduce to 1 name, does it work?', ()=>{
-                var searchText = "Noah";
+                var searchText = "jed";
                 var result = $scope.confirmSignIn(null, searchText);
                 var expected = {};
                 expected.status = true;

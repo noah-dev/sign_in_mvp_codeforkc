@@ -73,11 +73,10 @@ function signInCtrl ($q,  $http, $timeout, $mdToast, Config) {
         res = _this.confirmSignIn(member, searchText);
         name = res.member ? res.member.name : searchText;
         if (res.status) {
-            _this.newRecordDB(res.member).then(writeStatus=>{
-                if (writeStatus == "false"){
-                    res.status = false
+            _this.newRecordDB(res.member).then(resDB=>{
+                if (resDB.status){
+                    _this.updateUI(res.status, name);
                 }
-                _this.updateUI(res.status, name);
             });
         } else {
             _this.updateUI(res.status, name);
