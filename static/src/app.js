@@ -22,7 +22,6 @@ app.factory('Config', function(){
         _this.signInErrorTheme = "toast-error";
         _this.signInErrorDelay = 2000;
 
-        //_this.dbURL = "/api"
         _this.dbURL = "http://localhost:1000/signin"
     }
 });
@@ -52,9 +51,7 @@ function signInCtrl ($q,  $http, $timeout, $mdToast, Config) {
 
     function filterMembers (query) {
         var filteredNames = [];
-        
-        // If the user types something, but then deletes all characters, 
-        // reutn the entire list
+        // If the user types something, but then deletes all characters, return the entire list
         if (query === undefined){
             filteredNames = _this.members;
         } else {
@@ -76,6 +73,9 @@ function signInCtrl ($q,  $http, $timeout, $mdToast, Config) {
             _this.newRecordDB(res.member).then(resDB=>{
                 if (resDB.status){
                     _this.updateUI(res.status, name);
+                    _this.getMembersDB().then(readDB=>{
+                        _this.members = readDB.data;
+                    })
                 }
             });
         } else {
